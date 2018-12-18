@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 using Random = UnityEngine.Random;
 
 namespace Centipede
 {
     public class GridBoard : MonoBehaviour
     {
-        public class CountMushroom
+        [Serializable]
+        protected class CountMushroom
         {
             public int minimum;
             public int maximum;
@@ -19,7 +21,13 @@ namespace Centipede
         }
 
         [Space]
-        [Header("Object Spawn")]
+        [Header("Count of Mushroom")]
+
+        [SerializeField]
+        private CountMushroom countMushroom = new CountMushroom(30, 45);
+
+        [Space]
+        [Header("Object for Spawn")]
 
         [SerializeField]
         private GameObject mushroom;
@@ -29,27 +37,24 @@ namespace Centipede
 
         private int columns = 0;
         private int rows = 30;
-        private CountMushroom countMushroom;
         private Transform boardParent, mushroomParent;
         private List<Vector2> gridPosition = new List<Vector2>();
 
-        private void SetColumnCount()
+        void SetColumnCount()
         {
             float aspect_ratio = (float)Screen.width / (float)Screen.height;
 
             if (aspect_ratio == (16.0f / 9.0f))
             {
                 columns = 55;
-                countMushroom = new CountMushroom(35, 45);
             }
             else if(aspect_ratio == (4.0f / 3.0f))
             {
                 columns = 40;
-                countMushroom = new CountMushroom(30, 40);
             }
         }
 
-        private void InitGridPositionList()
+        void InitGridPositionList()
         {
             gridPosition.Clear();
 
@@ -77,7 +82,7 @@ namespace Centipede
             }
         }
 
-        private Vector2 RandomPosition()
+        Vector2 RandomPosition()
         {
             int randomIndex = Random.Range(0, gridPosition.Count);
             Vector2 randomPosition = gridPosition[randomIndex];
@@ -87,7 +92,7 @@ namespace Centipede
             return randomPosition;
         }
 
-        private void CreateMushroom(GameObject mushroom, int min, int max)
+        void CreateMushroom(GameObject mushroom, int min, int max)
         {
             int mushroomCount = Random.Range(min, max + 1);
             mushroomParent = new GameObject("Mushrooms").transform;
@@ -108,12 +113,5 @@ namespace Centipede
             GridBoardSetup();
             CreateMushroom(mushroom, countMushroom.minimum, countMushroom.maximum);
         }
-
-        private void Start()
-        {
-            SetupScene();
-        }
-    }
-
-    
+    } 
 }
