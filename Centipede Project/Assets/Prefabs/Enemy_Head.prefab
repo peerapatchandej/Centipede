@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4118000478853149351}
   - component: {fileID: 4118000478853149349}
   - component: {fileID: 4118000478853149348}
+  - component: {fileID: 7971716873420897481}
   m_Layer: 0
   m_Name: Enemy_Head
   m_TagString: Enemy
@@ -27,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4118000478853149350}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -69,9 +70,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1354178939
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300030, guid: be30c3a4800adb7459c5e3a4302eb8b8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -149,6 +150,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.875, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7971716873420897481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118000478853149350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5d7cd9c70879e248b6959c381a61107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  speed: 40
 --- !u!1 &4118000480007482334
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,7 +185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4118000480007482335
 Transform:
   m_ObjectHideFlags: 0

@@ -6,10 +6,10 @@ namespace Centipede
     public abstract class MovementManager : MonoBehaviour
     {
         [SerializeField]
-        private LayerMask objectLayer = 0;
+        protected LayerMask objectLayer;
         
-        private Rigidbody2D rb2d;
-        private BoxCollider2D boxCollider;
+        protected Rigidbody2D rb2d;
+        protected BoxCollider2D boxCollider;
         private RaycastHit2D hit;
 
         protected virtual void Start()
