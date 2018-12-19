@@ -4,28 +4,66 @@ namespace Centipede
 {
     public class Player : MovementManager
     {
+        [SerializeField]
+        protected int speed = 20;
+
+        [SerializeField]
+        private GameObject bullet = null;
+
+        [SerializeField]
+        private GameObject bulletSpawnPoint = null;
+
+        private float timer = 0f;
+        private float maxPositionY = 0;
+
         protected override void Start()
         {
+            maxPositionY = (GridCell.instance.rows * (15f / 100f)) + transform.position.y - 1;
             base.Start();
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            if(Input.GetKeyUp(KeyCode.LeftArrow))
+            if(GameManager.instance.playerCanMove == true)
             {
-                Move(- 1, 0);
+                int horizontal = 0; 
+                int vertical = 0;
+
+                horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+                vertical = (int)(Input.GetAxisRaw("Vertical"));
+
+                if (transform.position.y + vertical > maxPositionY)
+                {
+                    return;
+                }
+                
+                if (horizontal != 0)
+                {
+                    vertical = 0;
+                }
+
+                if (horizontal != 0 || vertical != 0)
+                {
+                    Move(horizontal, vertical, speed);
+                }
             }
-            else if (Input.GetKeyUp(KeyCode.RightArrow))
+
+            if(Input.GetKeyDown(KeyCode.Space))
             {
-                Move(1, 0);
+                Instantiate(bullet, bulletSpawnPoint.transform.position, Quaternion.identity);
+                timer = 0;
             }
-            else if (Input.GetKeyUp(KeyCode.UpArrow))
+            else if(Input.GetKey(KeyCode.Space))
             {
-                Move(0, 1);
-            }
-            else if (Input.GetKeyUp(KeyCode.DownArrow))
-            {
-                Move(0, -1);
+                if(timer < 0.1f)
+                {
+                    timer += Time.deltaTime;
+                }
+                else
+                {
+                    Instantiate(bullet, bulletSpawnPoint.transform.position, Quaternion.identity);
+                    timer = 0;
+                }
             }
         }
     }

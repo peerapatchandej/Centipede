@@ -246,11 +246,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9050925839329188780}
-  - component: {fileID: 8339198754913127781}
+  - component: {fileID: 1771230950932824372}
   - component: {fileID: 4110856092316871911}
+  - component: {fileID: 3668730268616539617}
   m_Layer: 8
   m_Name: Mushroom
-  m_TagString: Untagged
+  m_TagString: Shootable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -273,7 +274,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &8339198754913127781
+--- !u!50 &1771230950932824372
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -288,11 +289,11 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!61 &4110856092316871911
 BoxCollider2D:
@@ -304,7 +305,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -320,6 +321,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3668730268616539617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9050925839329188755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1165d516a013c4597a858e4f67b2c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mushroomDamage:
+  - {fileID: 9050925839145474922}
+  - {fileID: 9050925839432115437}
+  - {fileID: 9050925838404150494}
+  - {fileID: 9050925838706760342}
 --- !u!1 &9050925839432115437
 GameObject:
   m_ObjectHideFlags: 0

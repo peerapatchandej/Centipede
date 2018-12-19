@@ -5,7 +5,10 @@ namespace Centipede
     public class GameLoader : MonoBehaviour
     {
         [SerializeField]
-        private GameObject gameManager;
+        private GameObject gameManager = null;
+
+        [SerializeField]
+        private GameObject gridCell = null;
 
         private GridBoard gridBoard;
 
@@ -14,6 +17,11 @@ namespace Centipede
             if (GameManager.instance == null)
             {
                 Instantiate(gameManager);
+            }
+
+            if(GridCell.instance == null)
+            {
+                Instantiate(gridCell);
             }
             
             gridBoard = GetComponent<GridBoard>();

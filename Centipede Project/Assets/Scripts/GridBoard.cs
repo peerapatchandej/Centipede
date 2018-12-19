@@ -30,37 +30,20 @@ namespace Centipede
         [Header("Object for Spawn")]
 
         [SerializeField]
-        private GameObject mushroom;
+        private GameObject mushroom = null;
 
         [SerializeField]
-        private GameObject background;
-
-        private int columns = 0;
-        private int rows = 30;
+        private GameObject background = null;
         private Transform boardParent, mushroomParent;
         private List<Vector2> gridPosition = new List<Vector2>();
-
-        void SetColumnCount()
-        {
-            float aspect_ratio = (float)Screen.width / (float)Screen.height;
-
-            if (aspect_ratio == (16.0f / 9.0f))
-            {
-                columns = 55;
-            }
-            else if(aspect_ratio == (4.0f / 3.0f))
-            {
-                columns = 40;
-            }
-        }
 
         void InitGridPositionList()
         {
             gridPosition.Clear();
 
-            for(int x = columns / -2; x < (columns / 2) + 1; x++)
+            for(int x = GridCell.instance.columns / -2; x < (GridCell.instance.columns / 2) + 1; x++)
             {
-                for(int y = (rows / -2) + 1; y < (rows / 2) - 2; y++)
+                for(int y = (GridCell.instance.rows / -2) + 1; y < (GridCell.instance.rows / 2) - 2; y++)
                 { 
                     gridPosition.Add(new Vector2(x, y));
                 }
@@ -71,9 +54,9 @@ namespace Centipede
         {
             boardParent = new GameObject("Grid Board").transform;
 
-            for(int x = columns / -2; x < (columns / 2) + 1; x++)
+            for(int x = GridCell.instance.columns / -2; x < (GridCell.instance.columns / 2) + 1; x++)
             {
-                for (int y = rows / -2; y < (rows / 2) + 1; y++)
+                for (int y = GridCell.instance.rows / -2; y < (GridCell.instance.rows / 2) + 1; y++)
                 {
                     GameObject backgroundInstance = Instantiate(background, new Vector2(x, y), Quaternion.identity) as GameObject;
 
@@ -108,10 +91,10 @@ namespace Centipede
 
         public void SetupScene()
         {
-            SetColumnCount();
+
             InitGridPositionList();
             GridBoardSetup();
             CreateMushroom(mushroom, countMushroom.minimum, countMushroom.maximum);
         }
-    } 
+    }
 }
