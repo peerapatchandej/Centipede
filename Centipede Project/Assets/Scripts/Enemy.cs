@@ -7,24 +7,27 @@ namespace Centipede
     public class Enemy : MovementManager
     {
         [SerializeField]
-        protected int speed = 40;
+        private LayerMask edgeLayer;
+
+        [SerializeField]
+        protected int speed = 60;
 
         private bool isCollide = false;
         private int horizontal = 1;
+        private int vertical = -1;
         private List<GameObject> tempMushroom = new List<GameObject>();
-
-        // Start is called before the first frame update
+        private GameObject objectCollide;
+        
         protected override void Start()
         {
             base.Start();
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             if (GameManager.instance.enemyCanMove == true && isCollide == false)
             {
-                Move(horizontal, 0, speed);
+                Movement(horizontal, 0, speed);
             }
         }
 
@@ -33,49 +36,46 @@ namespace Centipede
             isCollide = true;
 
             Vector2 startPosition = transform.position;
-            Vector2 endPosition = startPosition + new Vector2(0, -1);
+            Vector2 endPosition = startPosition + new Vector2(0, vertical);
 
-            StartCoroutine(MoveDown(endPosition));
+            Transform edgeTopAndBottom = DetectCollider(endPosition, edgeLayer);
+
+            if (edgeTopAndBottom != null)
+            {
+                vertical = -vertical;
+                endPosition = startPosition + new Vector2(0, vertical);
+            }
+            
+            StartCoroutine(SmoothMovement(endPosition, speed));
             
         }
 
-        IEnumerator MoveDown(Vector3 endPos)
+        protected override IEnumerator SmoothMovement(Vector3 endPos, int speed)
         {
-            float sqrRemainingDistance = (transform.position - endPos).sqrMagnitude;
+            StartCoroutine(base.SmoothMovement(endPos, speed));
 
-            while (sqrRemainingDistance > float.Epsilon)
+            if (isCollide)
             {
-                Vector3 newPostion = Vector3.MoveTowards(base.rb2d.position, endPos, speed * Time.deltaTime);
+                Transform overrideObj = DetectCollider(endPos, objectLayer);
+                
+                if (overrideObj != null)
+                {
+                    GameObject temp = overrideObj.transform.gameObject;
+                    objectCollide = temp;
+                    temp.layer = 0;
+                    tempMushroom.Add(temp);
+                }
 
-                base.rb2d.MovePosition(newPostion);
-                sqrRemainingDistance = (transform.position - endPos).sqrMagnitude;
-
-                yield return null;
+                horizontal = -horizontal;
+                isCollide = false;
             }
 
-            yield return new WaitForSeconds(0.1f);
-
-            boxCollider.enabled = false;
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, endPos, objectLayer);
-            boxCollider.enabled = true;
-
-            if(hit.transform != null)
-            {
-                GameObject temp = hit.transform.gameObject;
-                objectHit = temp;
-                temp.layer = 0;
-                tempMushroom.Add(temp);
-            }
-
-            horizontal = -horizontal;
-            isCollide = false;
+            yield return null;
         }
-
-        private GameObject objectHit;
 
         void OnTriggerExit2D(Collider2D collision)
         {
-            if(collision.transform.gameObject == objectHit)
+            if(collision.transform.gameObject == objectCollide)
             {
                 if (tempMushroom.Count > 0)
                 {
@@ -83,6 +83,7 @@ namespace Centipede
                     {
                         tempMushroom[i].layer = 8;
                     }
+
                     tempMushroom.Clear();
                 }
             }

@@ -18,16 +18,12 @@ namespace Centipede
             boxCollider = GetComponent<BoxCollider2D>();
         }
 
-        protected void Move(int horizontal, int vertical, int speed)
+        protected void Movement(int horizontal, int vertical, int speed)
         {
             Vector2 startPosition = transform.position;
             Vector2 endPosition = startPosition + new Vector2(horizontal, vertical);
-            
-            boxCollider.enabled = false;
-            hit = Physics2D.Linecast(transform.position, endPosition, objectLayer);
-            boxCollider.enabled = true;
 
-            if(hit.transform == null)
+            if (DetectCollider(endPosition, objectLayer) == null)
             {
                 StartCoroutine(SmoothMovement(endPosition, speed));
             }
@@ -37,7 +33,16 @@ namespace Centipede
             }
         }
 
-        protected IEnumerator SmoothMovement(Vector3 endPos, int speed)
+        protected Transform DetectCollider(Vector2 endPos, LayerMask layer)
+        {
+            boxCollider.enabled = false;
+            hit = Physics2D.Linecast(transform.position, endPos, layer);
+            boxCollider.enabled = true;
+
+            return hit.transform;
+        }
+
+        protected virtual IEnumerator SmoothMovement(Vector3 endPos, int speed)
         {
             GameManager.instance.SetObjectCanMove(transform.tag, false);
 

@@ -165,7 +165,10 @@ MonoBehaviour:
   objectLayer:
     serializedVersion: 2
     m_Bits: 256
-  speed: 40
+  edgeLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  speed: 80
 --- !u!1 &4118000480007482334
 GameObject:
   m_ObjectHideFlags: 0

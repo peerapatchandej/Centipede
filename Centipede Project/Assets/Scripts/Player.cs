@@ -44,7 +44,7 @@ namespace Centipede
 
                 if (horizontal != 0 || vertical != 0)
                 {
-                    Move(horizontal, vertical, speed);
+                    Movement(horizontal, vertical, speed);
                 }
             }
 
