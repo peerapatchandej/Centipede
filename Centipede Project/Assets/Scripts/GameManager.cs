@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace Centipede
 {
@@ -10,8 +11,9 @@ namespace Centipede
         public bool playerCanMove = true;
 
         [HideInInspector]
-        public bool enemyCanMove = true;
-        
+        public bool enemyCanMove = false;
+        //public List<bool> enemyCanMove = new List<bool>();
+
         void Awake()
         {
             if(instance == null)
@@ -23,6 +25,14 @@ namespace Centipede
             {
                 Destroy(gameObject);
             }
+        }
+
+        private void Start()
+        {
+            /*for(int i = 0; i < 15; i++)
+            {
+                enemyCanMove.Add(true);
+            }*/
         }
 
         public void SetObjectCanMove(string objectTag, bool canMove)

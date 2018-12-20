@@ -22,7 +22,7 @@ namespace Centipede
         {
             Vector2 startPosition = transform.position;
             Vector2 endPosition = startPosition + new Vector2(horizontal, vertical);
-
+            
             if (DetectCollider(endPosition, objectLayer) == null)
             {
                 StartCoroutine(SmoothMovement(endPosition, speed));

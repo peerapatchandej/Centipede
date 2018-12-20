@@ -54,6 +54,8 @@ namespace Centipede
         {
             StartCoroutine(base.SmoothMovement(endPos, speed));
 
+            yield return new WaitUntil(() => GameManager.instance.enemyCanMove == true);
+
             if (isCollide)
             {
                 Transform overrideObj = DetectCollider(endPos, objectLayer);
@@ -69,8 +71,6 @@ namespace Centipede
                 horizontal = -horizontal;
                 isCollide = false;
             }
-
-            yield return null;
         }
 
         void OnTriggerExit2D(Collider2D collision)
