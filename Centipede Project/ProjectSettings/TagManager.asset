@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Shootable
   - Bullet
+  - Enemy Head
+  - Enemy Body
   - Enemy
   layers:
   - Default
@@ -17,7 +19,7 @@ TagManager:
   - 
   - 
   - Mushroom & Side Edge
-  - Top & Bottom Ede
+  - Top & Bottom Edge
   - 
   - 
   - 

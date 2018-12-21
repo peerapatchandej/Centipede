@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9050925838404150495}
   - component: {fileID: 9050925838404150488}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Mushroom_Damage 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9050925838706760343}
   - component: {fileID: 9050925838706760336}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Mushroom_Damage 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,7 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9050925839145474923}
   - component: {fileID: 9050925839145474916}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Mushroom_Full
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,7 +348,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9050925839432115438}
   - component: {fileID: 9050925839432115439}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Mushroom_Damage 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

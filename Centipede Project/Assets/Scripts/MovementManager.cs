@@ -7,11 +7,13 @@ namespace Centipede
     {
         [SerializeField]
         protected LayerMask objectLayer;
-        
-        protected Rigidbody2D rb2d;
-        protected BoxCollider2D boxCollider;
-        private RaycastHit2D hit;
 
+        protected bool objectCanMove = true;
+
+        protected Rigidbody2D rb2d;
+        private BoxCollider2D boxCollider;
+        private RaycastHit2D hit;
+        
         protected virtual void Start()
         {
             rb2d = GetComponent<Rigidbody2D>();
@@ -44,7 +46,7 @@ namespace Centipede
 
         protected virtual IEnumerator SmoothMovement(Vector3 endPos, int speed)
         {
-            GameManager.instance.SetObjectCanMove(transform.tag, false);
+            objectCanMove = false;
 
             float sqrRemainingDistance = (transform.position - endPos).sqrMagnitude;
 
@@ -58,9 +60,9 @@ namespace Centipede
                 yield return null;
             }
 
-            yield return new WaitForSeconds(0.1f);
-
-            GameManager.instance.SetObjectCanMove(transform.tag, true);
+            yield return new WaitForSeconds(0.05f);
+            
+            objectCanMove = true;
         }
 
         protected virtual void CollideObject()

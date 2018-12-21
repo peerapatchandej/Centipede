@@ -1,91 +1,118 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Centipede
 {
-    public class Enemy : MovementManager
+    public class Enemy : MonoBehaviour
     {
+        [SerializeField]
+        private LayerMask objectLayer;
+
         [SerializeField]
         private LayerMask edgeLayer;
 
         [SerializeField]
-        protected int speed = 60;
+        private float speed = 0.1f;
 
-        private bool isCollide = false;
+        [SerializeField]
+        private List<Transform> tail = new List<Transform>();
+
+        private Rigidbody2D rb2d;
+        private BoxCollider2D boxCollider;
+        private RaycastHit2D hit;
+        private GameObject objectCollide;
         private int horizontal = 1;
         private int vertical = -1;
-        private List<GameObject> tempMushroom = new List<GameObject>();
-        private GameObject objectCollide;
-        
-        protected override void Start()
+
+        void Start()
         {
-            base.Start();
+            rb2d = GetComponent<Rigidbody2D>();
+            boxCollider = GetComponent<BoxCollider2D>();
+
+            InvokeRepeating("InitMovement", 0.1f, speed);
         }
 
-        void FixedUpdate()
+        void InitMovement()
         {
-            if (GameManager.instance.enemyCanMove == true && isCollide == false)
+            if (GameManager.instance.gameStart)
             {
-                Movement(horizontal, 0, speed);
+                Vector2 startPosition = transform.position;
+                Vector2 endPosition = startPosition + new Vector2(horizontal, 0);
+
+                if (DetectCollider(endPosition, objectLayer) == null)
+                {
+                    Movement(endPosition);
+                }
+                else
+                {
+                    CollideObject();
+                }
             }
         }
 
-        protected override void CollideObject()
+        void Movement(Vector2 endPos)
         {
-            isCollide = true;
+            Vector2 tempPos = transform.position;
 
+            if (tail.Count > 0)
+            {
+                tail.Last().position = tempPos;
+                tail.Insert(0, tail.Last());
+                tail.RemoveAt(tail.Count - 1);
+            }
+
+            transform.position = endPos;
+        }
+
+        Transform DetectCollider(Vector2 endPos, LayerMask layer)
+        {
+            boxCollider.enabled = false;
+            hit = Physics2D.Linecast(transform.position, endPos, layer);
+            boxCollider.enabled = true;
+
+            return hit.transform;
+        }
+
+        protected void CollideObject()
+        {
             Vector2 startPosition = transform.position;
             Vector2 endPosition = startPosition + new Vector2(0, vertical);
 
-            Transform edgeTopAndBottom = DetectCollider(endPosition, edgeLayer);
-
-            if (edgeTopAndBottom != null)
+            if (DetectCollider(endPosition, edgeLayer) != null)
             {
                 vertical = -vertical;
                 endPosition = startPosition + new Vector2(0, vertical);
             }
-            
-            StartCoroutine(SmoothMovement(endPosition, speed));
-            
-        }
 
-        protected override IEnumerator SmoothMovement(Vector3 endPos, int speed)
-        {
-            StartCoroutine(base.SmoothMovement(endPos, speed));
+            Movement(endPosition);
 
-            yield return new WaitUntil(() => GameManager.instance.enemyCanMove == true);
+            horizontal = -horizontal;
 
-            if (isCollide)
+            startPosition = transform.position;
+            endPosition = startPosition + new Vector2(horizontal, 0);
+
+            if (DetectCollider(transform.position, objectLayer) != null)
             {
-                Transform overrideObj = DetectCollider(endPos, objectLayer);
-                
-                if (overrideObj != null)
-                {
-                    GameObject temp = overrideObj.transform.gameObject;
-                    objectCollide = temp;
-                    temp.layer = 0;
-                    tempMushroom.Add(temp);
-                }
-
-                horizontal = -horizontal;
-                isCollide = false;
+                Transform overrideObj = DetectCollider(transform.position, objectLayer);
+                objectCollide = overrideObj.transform.gameObject;
+                objectCollide.layer = 0;
             }
         }
 
-        void OnTriggerExit2D(Collider2D collision)
+        private void OnTriggerStay2D(Collider2D collision)
         {
-            if(collision.transform.gameObject == objectCollide)
+            if (collision.transform.gameObject == objectCollide)
             {
-                if (tempMushroom.Count > 0)
-                {
-                    for (int i = 0; i < tempMushroom.Count; i++)
-                    {
-                        tempMushroom[i].layer = 8;
-                    }
+                objectCollide.layer = 0;
+            }
+        }
 
-                    tempMushroom.Clear();
-                }
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.transform.gameObject == objectCollide)
+            {
+                objectCollide.layer = 8;
             }
         }
     }

@@ -134,7 +134,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -162,10 +162,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57465d16d7a26874f81d081894e71128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
   objectLayer:
     serializedVersion: 2
     m_Bits: 256
+  speed: 60
   bullet: {fileID: 5933553554731200809, guid: a65f0a215b22faf4ba55b4766b9b84a7, type: 3}
   bulletSpawnPoint: {fileID: 6783266732138636992}
 --- !u!1 &6783266732138636992

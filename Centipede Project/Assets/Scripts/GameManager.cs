@@ -6,13 +6,7 @@ namespace Centipede
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance;
-
-        [HideInInspector]
-        public bool playerCanMove = true;
-
-        [HideInInspector]
-        public bool enemyCanMove = false;
-        //public List<bool> enemyCanMove = new List<bool>();
+        public bool gameStart = false;
 
         void Awake()
         {
@@ -27,23 +21,11 @@ namespace Centipede
             }
         }
 
-        private void Start()
+        void Update()
         {
-            /*for(int i = 0; i < 15; i++)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                enemyCanMove.Add(true);
-            }*/
-        }
-
-        public void SetObjectCanMove(string objectTag, bool canMove)
-        {
-            if(objectTag == "Player")
-            {
-                playerCanMove = canMove;
-            }
-            else if(objectTag == "Enemy")
-            {
-                enemyCanMove = canMove;
+                gameStart = true;
             }
         }
     }
