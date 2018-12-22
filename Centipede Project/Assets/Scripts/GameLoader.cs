@@ -8,9 +8,7 @@ namespace Centipede
         private GameObject gameManager = null;
 
         [SerializeField]
-        private GameObject gridCell = null;
-
-        private GridBoard gridBoard;
+        private GameObject uiManager = null;
 
         void Awake()
         {
@@ -19,13 +17,10 @@ namespace Centipede
                 Instantiate(gameManager);
             }
 
-            if(GridCell.instance == null)
+            if (UIManager.instance == null)
             {
-                Instantiate(gridCell);
+                Instantiate(uiManager);
             }
-            
-            gridBoard = GetComponent<GridBoard>();
-            gridBoard.SetupScene();
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Centipede
 {
     public class Player : MovementManager
     {
         [SerializeField]
-        protected int speed = 60;
+        private int speed = 60;
 
         [SerializeField]
         private GameObject bullet = null;
@@ -13,18 +15,20 @@ namespace Centipede
         [SerializeField]
         private GameObject bulletSpawnPoint = null;
 
+        private Animator anim;
         private float timer = 0f;
         private float maxPositionY = 0;
 
         protected override void Start()
         {
-            maxPositionY = (GridCell.instance.rows * (15f / 100f)) + transform.position.y - 1;
+            maxPositionY = ((GameManager.instance.gridBoard.gridCell.rows - 3) * (15f / 100f)) + transform.position.y - 1;
             base.Start();
+            anim = GetComponent<Animator>();
         }
 
         void FixedUpdate()
         {
-            if (GameManager.instance.gameStart)
+            if (GameManager.instance.canPlay)
             {
                 if (objectCanMove)
                 {
@@ -34,7 +38,7 @@ namespace Centipede
                     horizontal = (int)(Input.GetAxisRaw("Horizontal"));
                     vertical = (int)(Input.GetAxisRaw("Vertical"));
 
-                    if (transform.position.y + vertical > maxPositionY)
+                    if (transform.position.y + vertical > maxPositionY || transform.position.y + vertical < -21)
                     {
                         return;
                     }
@@ -46,7 +50,7 @@ namespace Centipede
 
                     if (horizontal != 0 || vertical != 0)
                     {
-                        Movement(horizontal, vertical, speed);
+                        InitMovement(horizontal, vertical, speed);
                     }
                 }
 
@@ -67,6 +71,37 @@ namespace Centipede
                         timer = 0;
                     }
                 }
+            }
+        }
+
+        protected override IEnumerator Movement(Vector3 endPos)
+        {
+            objectCanMove = false;
+
+            rb2d.MovePosition(endPos);
+
+            yield return new WaitForSeconds(0.05f);
+
+            objectCanMove = true;
+        }
+
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            if(collision.CompareTag("Enemy"))
+            {
+                GameManager.instance.playerLife--;
+                GameManager.instance.canPlay = false;
+                GameManager.instance.isDead = true;
+                anim.Play("Player_Dead");
+                Invoke("Restart", 3f);
+            }
+        }
+
+        void Restart()
+        {
+            if (GameManager.instance.playerLife > 0)
+            {
+                SceneManager.LoadScene("Centipede Game");
             }
         }
     }

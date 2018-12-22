@@ -67,10 +67,11 @@
     <Compile Include="Assets\Scripts\GameLoader.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GridBoard.cs" />
-    <Compile Include="Assets\Scripts\GridCell.cs" />
     <Compile Include="Assets\Scripts\MovementManager.cs" />
+    <Compile Include="Assets\Scripts\MovementManagerOld.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Test\Collide.cs" />
     <Compile Include="Assets\Test\Snake.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

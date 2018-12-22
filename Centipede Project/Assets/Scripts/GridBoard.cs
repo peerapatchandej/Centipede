@@ -8,7 +8,20 @@ namespace Centipede
     public class GridBoard : MonoBehaviour
     {
         [Serializable]
-        protected class CountMushroom
+        public class GridCell
+        {
+            public int columns;
+            public int rows;
+
+            public GridCell(int col, int row)
+            {
+                columns = col;
+                row = rows;
+            }
+        }
+
+        [Serializable]
+        class CountMushroom
         {
             public int minimum;
             public int maximum;
@@ -19,6 +32,11 @@ namespace Centipede
                 maximum = max;
             }
         }
+
+        [Space]
+        [Header("Size of Grid Cell")]
+
+        public GridCell gridCell = new GridCell(40, 43);
 
         [Space]
         [Header("Count of Mushroom")]
@@ -34,6 +52,7 @@ namespace Centipede
 
         [SerializeField]
         private GameObject background = null;
+
         private Transform boardParent, mushroomParent;
         private List<Vector2> gridPosition = new List<Vector2>();
 
@@ -41,9 +60,9 @@ namespace Centipede
         {
             gridPosition.Clear();
 
-            for(int x = GridCell.instance.columns / -2; x < (GridCell.instance.columns / 2) + 1; x++)
+            for(int x = gridCell.columns / -2; x < (gridCell.columns / 2) + 1; x++)
             {
-                for(int y = (GridCell.instance.rows / -2) + 1; y < (GridCell.instance.rows / 2) - 2; y++)
+                for(int y = (gridCell.rows / -2) + 1; y < (gridCell.rows / 2) - 2; y++)
                 { 
                     gridPosition.Add(new Vector2(x, y));
                 }
@@ -54,9 +73,9 @@ namespace Centipede
         {
             boardParent = new GameObject("Grid Board").transform;
 
-            for(int x = GridCell.instance.columns / -2; x < (GridCell.instance.columns / 2) + 1; x++)
+            for(int x = gridCell.columns / -2; x < (gridCell.columns / 2) + 1; x++)
             {
-                for (int y = GridCell.instance.rows / -2; y < (GridCell.instance.rows / 2) + 1; y++)
+                for (int y = gridCell.rows / -2; y < (gridCell.rows / 2) + 1; y++)
                 {
                     GameObject backgroundInstance = Instantiate(background, new Vector2(x, y), Quaternion.identity) as GameObject;
 
@@ -91,7 +110,6 @@ namespace Centipede
 
         public void SetupScene()
         {
-
             InitGridPositionList();
             GridBoardSetup();
             CreateMushroom(mushroom, countMushroom.minimum, countMushroom.maximum);

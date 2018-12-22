@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Centipede
 {
-    public class EnemyOld : MovementManager
+    public class EnemyOld : MovementManagerOld
     {
         [SerializeField]
         private LayerMask edgeLayer;
@@ -48,7 +48,7 @@ namespace Centipede
 
         void FixedUpdate()
         {
-            if (GameManager.instance.gameStart)
+            if (GameManager.instance.canPlay)
             {
                 if (isHead && objectCanMove && isCollide == false)
                 {
@@ -59,14 +59,14 @@ namespace Centipede
                         followMovement.canFollow = true;
                     }
 
-                    Movement(horizontal, 0, speed);
+                    //Movement(horizontal, 0, speed);
                 }
                 else
                 {
                     if (isFollower && followerMovement.canFollow && isCollide == false)
                     {
                         followerMovement.canFollow = false;
-                        Movement(horizontal, 0, speed);
+                        //Movement(horizontal, 0, speed);
                     }
                 }
             }
