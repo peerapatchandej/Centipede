@@ -14,12 +14,19 @@ namespace Centipede
         {
             if (collision.CompareTag("Bullet"))
             {
-                mushroomDamage[damageIndex].SetActive(false);
-                damageIndex++;
-
                 if (damageIndex != mushroomDamage.Count)
                 {
-                    mushroomDamage[damageIndex].SetActive(true);
+                    mushroomDamage[damageIndex].SetActive(false);
+                    damageIndex++;
+
+                    if (damageIndex != mushroomDamage.Count)
+                    {
+                        mushroomDamage[damageIndex].SetActive(true);
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
                 else
                 {

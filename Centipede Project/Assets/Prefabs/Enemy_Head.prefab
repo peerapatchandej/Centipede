@@ -133,7 +133,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -147,7 +147,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8732724, y: 1}
+  m_Size: {x: 0.875, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &679006173
 MonoBehaviour:
@@ -167,8 +167,11 @@ MonoBehaviour:
   edgeLayer:
     serializedVersion: 2
     m_Bits: 512
-  speed: 0.1
+  speed: 0.05
+  animationClip: {fileID: 7400000, guid: 8a851570149b4a64797d21d0be724c9b, type: 2}
   tail:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  headEnemy: {fileID: 0}
+  horizontal: 1

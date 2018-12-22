@@ -21,6 +21,11 @@ namespace Centipede
             {
                 Destroy(gameObject);
             }
+            else if(collision.CompareTag("Enemy"))
+            {
+                Enemy bodyPart = collision.GetComponent<Enemy>();
+                
+            }
         }
     }
 }
