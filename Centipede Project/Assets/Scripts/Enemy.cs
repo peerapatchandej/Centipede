@@ -74,7 +74,7 @@ namespace Centipede
 
                 if (tail.Count > 0)
                 {
-                    tail.Last().localScale = new Vector2(horizontal, 1);
+                    tail.Last().localScale = new Vector2(-horizontal, 1);
                     tail.Last().position = tempPos;
                     tail.Insert(0, tail.Last());
                     tail.RemoveAt(tail.Count - 1);
@@ -107,9 +107,7 @@ namespace Centipede
                 }
 
                 horizontal = -horizontal;
-                transform.localScale = new Vector2(horizontal, 1);
                 transform.Rotate(new Vector3(0, 0, vertical * 90));
-
                 isCollide = false;
             }
 
@@ -161,7 +159,6 @@ namespace Centipede
                     }
                 }
 
-                headEnemy.transform.localScale = new Vector2(horizontal, 1);
                 isUpdate = true;
             }
             catch (Exception e)
@@ -250,11 +247,14 @@ namespace Centipede
                             newHeadEnemy.horizontal = -headEnemy.horizontal;    
                             newHeadEnemy.vertical = headEnemy.vertical;         
                             newHeadEnemy.UpdateHead();
-                            newHeadEnemy.RandomSpeed();                         
+                            newHeadEnemy.RandomSpeed();
+
+                            newHead.transform.localScale = new Vector2(-newHeadEnemy.horizontal, 1);
 
                             for (int i = 0; i < newHeadEnemy.tail.Count; i++)
                             {
                                 newHeadEnemy.tail[i].GetComponent<BoxCollider2D>().enabled = true;
+                                newHeadEnemy.tail[i].transform.localScale = new Vector2(-1, 1);
                             }
 
                             for (int i = 0; i < headEnemy.tail.Count; i++)
