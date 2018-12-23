@@ -23,6 +23,7 @@ namespace Centipede
                 else
                 {
                     GameManager.instance.score++;
+                    UIManager.instance.UpdateScore();
                     Destroy(gameObject);
                 }
             }

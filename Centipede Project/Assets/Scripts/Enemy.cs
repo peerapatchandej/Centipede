@@ -135,7 +135,8 @@ namespace Centipede
                 {
                     isShooted = true;
                     GameManager.instance.score += 10;
-                    Destroy(collision.gameObject);
+                    GameManager.instance.enemyLife--;
+                    UIManager.instance.UpdateScore();
 
                     headEnemy.isDivide = true;  //Suspended movement 
 

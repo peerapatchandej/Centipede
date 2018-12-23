@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Centipede
 {
@@ -8,6 +9,7 @@ namespace Centipede
         public static UIManager instance;
 
         private Text scoreText;
+        private Text lifeText;
         private Text gameoverText;
 
         void Awake()
@@ -22,19 +24,44 @@ namespace Centipede
                 Destroy(gameObject);
             }
 
-            scoreText = GameObject.Find("Score Text").GetComponent<Text>();
-            gameoverText = GameObject.Find("Game Over Text").GetComponent<Text>();
-            gameoverText.gameObject.SetActive(false);
+            instance.FindUI();
+            instance.UpdateLife();
         }
 
-        void UpdateScore()
+        public void UpdateScore()
         {
             scoreText.text = "Score : " + GameManager.instance.score;
         }
 
-        void ShowGameOver()
+        public void UpdateLife()
+        {
+            lifeText.text = "Life : " + GameManager.instance.playerLife;
+        }
+
+        public void ShowGameOver()
         {
             gameoverText.gameObject.SetActive(true);
+        }
+
+        private void FindUI()
+        {
+            scoreText = GameObject.Find("Score Text").GetComponent<Text>();
+            lifeText = GameObject.Find("Life Text").GetComponent<Text>();
+            gameoverText = GameObject.Find("Game Over Text").GetComponent<Text>();
+            gameoverText.gameObject.SetActive(false);
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static public void CallbackInitialization()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            instance.FindUI();
+            instance.UpdateScore();
+            instance.UpdateLife();
         }
     }
 }

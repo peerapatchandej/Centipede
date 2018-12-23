@@ -21,7 +21,7 @@ namespace Centipede
 
         protected override void Start()
         {
-            maxPositionY = ((GameManager.instance.gridBoard.gridCell.rows - 3) * (15f / 100f)) + transform.position.y - 1;
+            maxPositionY = ((GameManager.instance.gridBoard.rows - 3) * (15f / 100f)) + transform.position.y - 1;
             base.Start();
             anim = GetComponent<Animator>();
         }
@@ -91,18 +91,25 @@ namespace Centipede
             {
                 GameManager.instance.playerLife--;
                 GameManager.instance.canPlay = false;
-                GameManager.instance.isDead = true;
+
+                UIManager.instance.UpdateLife();
                 anim.Play("Player_Dead");
-                Invoke("Restart", 3f);
+
+                if (GameManager.instance.playerLife != 0)
+                {
+                    Invoke("Retry", 3f); /*************/
+                }
+                else
+                {
+                    UIManager.instance.ShowGameOver();
+                }
             }
         }
 
-        void Restart()
+        void Retry()
         {
-            if (GameManager.instance.playerLife > 0)
-            {
-                SceneManager.LoadScene("Centipede Game");
-            }
+            GameManager.instance.enemyLife = 15;
+            SceneManager.LoadScene("Centipede Game");
         }
     }
 }

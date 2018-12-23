@@ -6,12 +6,25 @@ namespace Centipede
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance;
+
+        public int maxPlayerLife = 3;
+        public int maxEnemyLife = 15;
+
+        [HideInInspector]
         public GridBoard gridBoard;
+
+        [HideInInspector]
         public bool canPlay = false;
-        public bool isDead = false;
-        public int playerLife = 3;
+
+        //[HideInInspector]
+        public int playerLife;
+
+        //[HideInInspector]
+        public int enemyLife;
+
+        //[HideInInspector]
         public int score = 0;
-        
+
         void Awake()
         {
             if(instance == null)
@@ -24,20 +37,29 @@ namespace Centipede
                 Destroy(gameObject);
             }
 
-            gridBoard = GetComponent<GridBoard>();
-        }
+            playerLife = maxPlayerLife;
+            enemyLife = maxEnemyLife;
 
-        void Start()
-        {
+            gridBoard = GetComponent<GridBoard>();
             gridBoard.SetupScene();
         }
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && !canPlay && playerLife == 3)
+            if (enemyLife == 0)
+            {
+                canPlay = false;
+                UIManager.instance.ShowGameOver();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && !canPlay && playerLife == 3 && enemyLife != 0)
             {
                 canPlay = true;
             }
+            else if(Input.GetKeyDown(KeyCode.Space) && !canPlay && (playerLife == 0 || enemyLife == 0))
+            {
+                Restart();
+            } 
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -54,7 +76,15 @@ namespace Centipede
             }
 
             instance.gridBoard.SetupScene();
-            instance.isDead = false;
+        }
+
+        private void Restart()
+        {
+            playerLife = maxPlayerLife;
+            enemyLife = maxEnemyLife;
+            score = 0;
+            canPlay = true;
+            SceneManager.LoadScene("Centipede Game");
         }
     }
 }
