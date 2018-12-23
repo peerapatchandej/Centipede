@@ -11,7 +11,7 @@ namespace Centipede
         protected bool objectCanMove = true;
 
         protected Rigidbody2D rb2d;
-        private BoxCollider2D boxCollider;
+        protected BoxCollider2D boxCollider;
         private RaycastHit2D hit;
 
         protected virtual void Start()

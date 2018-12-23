@@ -74,7 +74,11 @@ namespace Centipede
                 tail.RemoveAt(tail.Count - 1);
             }
 
+            boxCollider.enabled = false;
+
             rb2d.MovePosition(endPos);
+
+            boxCollider.enabled = true;
 
             //When enemy pass mushroom while head change direction. 
             if (objectCollide != null)
