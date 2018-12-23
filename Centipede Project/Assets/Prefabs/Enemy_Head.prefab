@@ -165,6 +165,7 @@ MonoBehaviour:
   objectLayer:
     serializedVersion: 2
     m_Bits: 256
+  objectCanMove: 1
   edgeLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -186,6 +187,9 @@ MonoBehaviour:
   - {fileID: 0}
   headEnemy: {fileID: 0}
   horizontal: 1
+  isCollide: 0
+  isShooted: 0
+  isDivide: 0
 --- !u!114 &1072822731173166990
 MonoBehaviour:
   m_ObjectHideFlags: 0

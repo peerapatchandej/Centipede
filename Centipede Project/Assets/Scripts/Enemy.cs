@@ -2,9 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using Random = UnityEngine.Random;
 
 namespace Centipede
 {
+    /// <summary>
+    /// Class inherits from MovementManager class.
+    /// </summary>
     public class Enemy : MovementManager
     {
         [SerializeField]
@@ -13,41 +18,34 @@ namespace Centipede
         [SerializeField]
         private float speed = 0.05f;
 
-        public List<Transform> tail = new List<Transform>();
+        [SerializeField]
+        private List<Transform> tail = new List<Transform>();
 
-        [HideInInspector]
-        public Enemy headEnemy;
-
-        [HideInInspector]
-        public int horizontal = 1;
-
-        private SpriteRenderer sprite;
-        private GameObject objectCollide;
+        private int horizontal = 1;
         private int vertical = -1;
+        private Enemy headEnemy;
+        private GameObject objectCollide;
         private bool isCollide = false;
         private bool isShooted = false;
         private bool isDivide = false;
+        private bool isUpdate = false;
 
+        /// <summary>
+        /// Called awake method of class base.
+        /// </summary>
         protected override void Awake()
         {
             base.Awake();
-            sprite = GetComponent<SpriteRenderer>();
         }
 
         void Start()
         {
-            anim.Play("Enemy_Head");
-
-            //ส่วนไหนที่เป็นหัว จะบอกทุก ๆ ส่วนว่า ตัวนี้คือหัวนะ
-            headEnemy = GetComponent<Enemy>();
-
-            if (tail.Count > 0)
+            if (!isUpdate)
             {
-                for (int i = 0; i < tail.Count; i++)
-                {
-                    tail[i].GetComponent<Enemy>().headEnemy = headEnemy;
-                }
+                UpdateHead();
+                transform.localScale = new Vector2(-1, 1);
             }
+            anim.Play("Enemy_Head");
         }
 
         private void FixedUpdate()
@@ -61,35 +59,43 @@ namespace Centipede
             }
         }
 
+        /// <summary>
+        /// This class overrides this method for movement of the enemy.
+        /// </summary>
+        /// <param name="endPos">It's end position that enemy will move.</param>
+        /// <returns></returns>
         protected override IEnumerator Movement(Vector3 endPos)
         {
-            objectCanMove = false;
-
-            Vector2 tempPos = transform.position;
-
-            if (tail.Count > 0)
+            try
             {
-                tail.Last().localScale = new Vector2(horizontal, 1);
-                tail.Last().position = tempPos;
-                tail.Insert(0, tail.Last());
-                tail.RemoveAt(tail.Count - 1);
+                objectCanMove = false;
+
+                Vector2 tempPos = transform.position;
+
+                if (tail.Count > 0)
+                {
+                    tail.Last().localScale = new Vector2(horizontal, 1);
+                    tail.Last().position = tempPos;
+                    tail.Insert(0, tail.Last());
+                    tail.RemoveAt(tail.Count - 1);
+                }
+
+                boxCollider.enabled = false;
+                rb2d.MovePosition(endPos);
+                boxCollider.enabled = true;
+
+                if (objectCollide != null)
+                {
+                    objectCollide.layer = 8;
+                }
             }
-
-            boxCollider.enabled = false;
-
-            rb2d.MovePosition(endPos);
-
-            boxCollider.enabled = true;
-
-            //When enemy pass mushroom while head change direction. 
-            if (objectCollide != null)
+            catch (Exception e)
             {
-                objectCollide.layer = 8;
+                UIManager.instance.ShowException(e);
             }
 
             yield return new WaitForSeconds(speed);
 
-            //It's case enemy overlap with mushroom when movement of enemy finished;
             if (isCollide)
             {
                 Transform overrideObj = DetectCollider(transform.position, objectLayer);
@@ -110,6 +116,9 @@ namespace Centipede
             objectCanMove = true;
         }
 
+        /// <summary>
+        /// Enemy will move down and reverse direct when it collide with edge or mushroom.
+        /// </summary>
         protected override void CollideObject()
         {
             isCollide = true;
@@ -127,99 +136,149 @@ namespace Centipede
             StartCoroutine(Movement(endPosition));
         }
 
+        /// <summary>
+        /// Random speed of movement
+        /// </summary>
         void RandomSpeed()
         {
             speed = Random.Range(0.03f, 0.05f);
         }
 
         /// <summary>
-        /// Deviding part of enemy
+        /// When some part has turned new head. It's will update data to tails that It's new head.
         /// </summary>
-        /// <param name="collision">Use get additional information of bullet</param>
+        void UpdateHead()
+        {
+            try
+            {
+                headEnemy = GetComponent<Enemy>();
+
+                if (tail.Count > 0)
+                {
+                    for (int i = 0; i < tail.Count; i++)
+                    {
+                        tail[i].GetComponent<Enemy>().headEnemy = headEnemy;
+                    }
+                }
+
+                headEnemy.transform.localScale = new Vector2(horizontal, 1);
+                isUpdate = true;
+            }
+            catch (Exception e)
+            {
+                UIManager.instance.ShowException(e);
+            }
+        }
+
+        /// <summary>
+        /// Deviding part of the enemy when some part is shooted
+        /// </summary>
+        /// <param name="collision">Use get additional information of the bullet</param>
         void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.CompareTag("Bullet"))
+            try
             {
-                if (!isShooted)
+                if (collision.CompareTag("Bullet"))
                 {
-                    bool isFirstHit = false;
-
-                    isShooted = true;
-                    headEnemy.isDivide = true; //Suspended movement
-
-                    //It is the case bullet collides with this part but other part is collided too.
-                    if (collision.transform.position.x == transform.position.x)
+                    if (!isShooted)
                     {
-                        isFirstHit = true;
-                    }
-                    else
-                    {
-                        isShooted = false;
-                        isDivide = false;
-                        return;
-                    }
+                        bool isHead = false;
+                        isShooted = true;
+                        headEnemy.isDivide = true;
 
-                    Transform newHead = null;
-                    Enemy newHeadEnemy = null;
-
-                    int thisIndex = headEnemy.tail.IndexOf(transform);  //Get this index of list
-
-                    if (thisIndex == -1)    //It is the case player shoot head;
-                    {
-                        if (headEnemy.tail.Count > 0)
+                        if (collision.transform.position.x != transform.position.x)
                         {
-                            //Set new head
+                            isShooted = false;
+                            isDivide = false;
+                            return;
+                        }
+
+                        Transform newHead = null;
+                        Enemy newHeadEnemy = null;
+
+                        int thisIndex = headEnemy.tail.IndexOf(transform);
+
+                        if (thisIndex == -1)
+                        {
+                            if (headEnemy.tail.Count > 0)
+                            {
+                                isHead = true;
+                                
+                                for (int i = 0;i < headEnemy.tail.Count; i++)
+                                {
+                                    headEnemy.tail[i].GetComponent<BoxCollider2D>().enabled = false;
+                                }
+                                
+                                newHead = headEnemy.tail.Last();
+                                newHeadEnemy = newHead.GetComponent<Enemy>();
+
+                                headEnemy.tail.RemoveAt(headEnemy.tail.Count - 1);
+                                newHeadEnemy.tail = headEnemy.tail;
+                                newHeadEnemy.tail.Reverse();
+                            }
+                        }
+                        else if (thisIndex != headEnemy.tail.Count - 1)
+                        {
+                            for (int i = 0; i < headEnemy.tail.Count; i++)
+                            {
+                                headEnemy.tail[i].GetComponent<BoxCollider2D>().enabled = false;
+                            }
+
                             newHead = headEnemy.tail.Last();
                             newHeadEnemy = newHead.GetComponent<Enemy>();
 
-                            //Transfer all of the data from current head list to new head list
-                            headEnemy.tail.RemoveAt(headEnemy.tail.Count - 1);
-                            newHeadEnemy.tail = headEnemy.tail;
-                            newHeadEnemy.tail.Reverse();
+                            int nextIndex = thisIndex + 1;                      
+
+                            if (nextIndex != headEnemy.tail.Count)
+                            {
+                                newHeadEnemy.tail = headEnemy.tail.GetRange(nextIndex, headEnemy.tail.Count - (nextIndex + 1)).ToList();
+
+                                headEnemy.tail.RemoveAt(nextIndex - 1);
+                                headEnemy.tail.RemoveAt(headEnemy.tail.Count - 1);
+                                headEnemy.tail = headEnemy.tail.Except(newHeadEnemy.tail).ToList();
+                                newHeadEnemy.tail.Reverse();
+                            }
                         }
-                    }
-                    else if (thisIndex != headEnemy.tail.Count - 1)
-                    {
-                        //Set new head
-                        newHead = headEnemy.tail.Last();
-                        newHeadEnemy = newHead.GetComponent<Enemy>();
-
-                        int nextIndex = thisIndex + 1;                      //Get next index from this index
-
-                        //Devide data of current head list into new head list
-                        if (nextIndex != headEnemy.tail.Count)
+                        else    
                         {
-                            newHeadEnemy.tail = headEnemy.tail.GetRange(nextIndex, headEnemy.tail.Count - (nextIndex + 1)).ToList();
-
-                            headEnemy.tail.RemoveAt(nextIndex - 1);
-                            headEnemy.tail.RemoveAt(headEnemy.tail.Count - 1);
-                            headEnemy.tail = headEnemy.tail.Except(newHeadEnemy.tail).ToList();
-                            newHeadEnemy.tail.Reverse();
+                            headEnemy.tail.RemoveAt(thisIndex);
+                            headEnemy.isDivide = false;                         
                         }
-                    }
-                    else    //It is the case player shoot last part
-                    {
-                        headEnemy.tail.RemoveAt(thisIndex);
-                        headEnemy.isDivide = false;                         //Continued movement
-                    }
 
-                    if(newHead != null && newHeadEnemy != null)
-                    {
-                        newHeadEnemy.horizontal = -headEnemy.horizontal;    //Set new horzontal direction for new head
-                        newHeadEnemy.vertical = headEnemy.vertical;         //Set new vertical direction for new head
-                        headEnemy.isDivide = false;                         //Continued movement
-                        newHeadEnemy.RandomSpeed();                         //Random speed for new head movement
-                        newHeadEnemy.enabled = true;                        //Enable script of new head
-                    }
+                        if (newHead != null && newHeadEnemy != null)
+                        {
+                            newHeadEnemy.horizontal = -headEnemy.horizontal;    
+                            newHeadEnemy.vertical = headEnemy.vertical;         
+                            newHeadEnemy.UpdateHead();
+                            newHeadEnemy.RandomSpeed();                         
 
-                    if(isFirstHit)
-                    {
+                            for (int i = 0; i < newHeadEnemy.tail.Count; i++)
+                            {
+                                newHeadEnemy.tail[i].GetComponent<BoxCollider2D>().enabled = true;
+                            }
+
+                            for (int i = 0; i < headEnemy.tail.Count; i++)
+                            {
+                                headEnemy.tail[i].GetComponent<BoxCollider2D>().enabled = true;
+                            }                      
+                            
+                            if (!isHead)
+                            {
+                                headEnemy.isDivide = false;                     
+                            }
+                            newHeadEnemy.enabled = true;                        
+                        }
+
                         GameManager.instance.score += 10;
                         GameManager.instance.enemyLife--;
                         UIManager.instance.UpdateScore();
                         anim.Play("Enemy_Dead");
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                UIManager.instance.ShowException(e);
             }
         }
     }

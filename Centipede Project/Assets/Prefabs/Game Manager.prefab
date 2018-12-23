@@ -44,10 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f8241f2b89f5844a95fbc324575c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxPlayerLife: 3
+  maxEnemyLife: 15
   gridBoard: {fileID: 0}
   canPlay: 0
-  isDead: 0
   playerLife: 3
+  enemyLife: 0
   score: 0
 --- !u!114 &1744529664932106885
 MonoBehaviour:
@@ -61,12 +63,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a008604cd05fc94439b54d327f1dabb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridCell:
-    columns: 40
-    rows: 43
-  countMushroom:
-    minimum: 35
-    maximum: 45
+  columns: 40
+  rows: 43
+  minimum: 45
+  maximum: 60
   mushroom: {fileID: 9050925839329188755, guid: 663cdb5411500524ba3d733c4b4f83fd,
     type: 3}
   background: {fileID: 5813168177836888878, guid: cf4ec35901edb004c8ef79bd87ef9084,

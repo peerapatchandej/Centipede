@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using Random = UnityEngine.Random;
 
 namespace Centipede
@@ -34,6 +33,9 @@ namespace Centipede
         private Transform boardParent, mushroomParent;
         private List<Vector2> gridPosition = new List<Vector2>();
 
+        /// <summary>
+        /// Adding position of the grid to gridPosition list
+        /// </summary>
         void InitGridPositionList()
         {
             gridPosition.Clear();
@@ -47,6 +49,9 @@ namespace Centipede
             }
         }
 
+        /// <summary>
+        /// Generating background of the scene
+        /// </summary>
         void GridBoardSetup()
         {
             boardParent = new GameObject("Grid Board").transform;
@@ -61,6 +66,10 @@ namespace Centipede
             }
         }
 
+        /// <summary>
+        /// It's random position for generating mushrooms.
+        /// </summary>
+        /// <returns>random positon value</returns>
         Vector2 RandomPosition()
         {
             int randomIndex = Random.Range(0, gridPosition.Count);
@@ -71,6 +80,12 @@ namespace Centipede
             return randomPosition;
         }
 
+        /// <summary>
+        /// Generating mushrooms of the scene
+        /// </summary>
+        /// <param name="mushroom">mushroom object for generating</param>
+        /// <param name="min">min amount of mushrooms</param>
+        /// <param name="max">max amount of mushrooms</param>
         void CreateMushroom(GameObject mushroom, int min, int max)
         {
             int mushroomCount = Random.Range(min, max + 1);
@@ -85,6 +100,9 @@ namespace Centipede
             }
         }
 
+        /// <summary>
+        /// Generating board of the game
+        /// </summary>
         public void SetupScene()
         {
             InitGridPositionList();
