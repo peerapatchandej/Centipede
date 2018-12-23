@@ -139,6 +139,7 @@ namespace Centipede
         void Retry()
         {
             GameManager.instance.enemyLife = 15;
+            GameManager.instance.score = 0;
             SceneManager.LoadScene("Centipede Game");
         }
     }
