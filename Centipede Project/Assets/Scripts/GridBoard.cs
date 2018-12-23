@@ -56,7 +56,6 @@ namespace Centipede
                 for (int y = rows / -2; y < (rows / 2) + 1; y++)
                 {
                     GameObject backgroundInstance = Instantiate(background, new Vector2(x, y), Quaternion.identity) as GameObject;
-
                     backgroundInstance.transform.SetParent(boardParent);
                 }
             }

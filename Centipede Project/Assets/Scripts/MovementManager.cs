@@ -12,12 +12,14 @@ namespace Centipede
 
         protected Rigidbody2D rb2d;
         protected BoxCollider2D boxCollider;
+        protected Animator anim;
         private RaycastHit2D hit;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             rb2d = GetComponent<Rigidbody2D>();
             boxCollider = GetComponent<BoxCollider2D>();
+            anim = GetComponent<Animator>();
         }
 
         protected void InitMovement(int horizontal, int vertical, float speed)

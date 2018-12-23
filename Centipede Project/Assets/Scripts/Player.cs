@@ -15,15 +15,17 @@ namespace Centipede
         [SerializeField]
         private GameObject bulletSpawnPoint = null;
 
-        private Animator anim;
         private float timer = 0f;
         private float maxPositionY = 0;
 
-        protected override void Start()
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
+        void Start()
         {
             maxPositionY = ((GameManager.instance.gridBoard.rows - 3) * (15f / 100f)) + transform.position.y - 1;
-            base.Start();
-            anim = GetComponent<Animator>();
         }
 
         void FixedUpdate()
@@ -97,7 +99,7 @@ namespace Centipede
 
                 if (GameManager.instance.playerLife != 0)
                 {
-                    Invoke("Retry", 3f); /*************/
+                    Invoke("Retry", 1f); /*************/
                 }
                 else
                 {

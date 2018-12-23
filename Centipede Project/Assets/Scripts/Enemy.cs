@@ -13,9 +13,6 @@ namespace Centipede
         [SerializeField]
         private float speed = 0.05f;
 
-        [SerializeField]
-        private AnimationClip animationClip;
-
         public List<Transform> tail = new List<Transform>();
 
         [HideInInspector]
@@ -24,18 +21,21 @@ namespace Centipede
         [HideInInspector]
         public int horizontal = 1;
 
-        private Animator anim;
+        private SpriteRenderer sprite;
         private GameObject objectCollide;
         private int vertical = -1;
         private bool isCollide = false;
         private bool isShooted = false;
         private bool isDivide = false;
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
-            anim = GetComponent<Animator>();
+            base.Awake();
+            sprite = GetComponent<SpriteRenderer>();
+        }
 
+        void Start()
+        {
             anim.Play("Enemy_Head");
 
             //ส่วนไหนที่เป็นหัว จะบอกทุก ๆ ส่วนว่า ตัวนี้คือหัวนะ
@@ -54,7 +54,7 @@ namespace Centipede
         {
             if (GameManager.instance.canPlay)
             {
-                if (objectCanMove && !isCollide && !isDivide)
+                if (objectCanMove && !isCollide && !isDivide && !isShooted)
                 {
                     InitMovement(horizontal, 0, speed);
                 }
@@ -69,6 +69,7 @@ namespace Centipede
 
             if (tail.Count > 0)
             {
+                tail.Last().localScale = new Vector2(horizontal, 1);
                 tail.Last().position = tempPos;
                 tail.Insert(0, tail.Last());
                 tail.RemoveAt(tail.Count - 1);
@@ -100,6 +101,9 @@ namespace Centipede
                 }
 
                 horizontal = -horizontal;
+                transform.localScale = new Vector2(horizontal, 1);
+                transform.Rotate(new Vector3(0, 0, vertical * 90));
+
                 isCollide = false;
             }
 
@@ -119,6 +123,7 @@ namespace Centipede
                 endPosition = startPosition + new Vector2(0, vertical);
             }
 
+            transform.Rotate(new Vector3(0, 0, vertical * 90));
             StartCoroutine(Movement(endPosition));
         }
 
@@ -137,17 +142,26 @@ namespace Centipede
             {
                 if (!isShooted)
                 {
-                    isShooted = true;
-                    GameManager.instance.score += 10;
-                    GameManager.instance.enemyLife--;
-                    UIManager.instance.UpdateScore();
+                    bool isFirstHit = false;
 
-                    headEnemy.isDivide = true;  //Suspended movement 
+                    isShooted = true;
+                    headEnemy.isDivide = true; //Suspended movement
+
+                    //It is the case bullet collides with this part but other part is collided too.
+                    if (collision.transform.position.x == transform.position.x)
+                    {
+                        isFirstHit = true;
+                    }
+                    else
+                    {
+                        isShooted = false;
+                        isDivide = false;
+                        return;
+                    }
 
                     Transform newHead = null;
                     Enemy newHeadEnemy = null;
 
-                    
                     int thisIndex = headEnemy.tail.IndexOf(transform);  //Get this index of list
 
                     if (thisIndex == -1)    //It is the case player shoot head;
@@ -170,8 +184,7 @@ namespace Centipede
                         newHead = headEnemy.tail.Last();
                         newHeadEnemy = newHead.GetComponent<Enemy>();
 
-                        //Get next index from this index
-                        int nextIndex = thisIndex + 1;
+                        int nextIndex = thisIndex + 1;                      //Get next index from this index
 
                         //Devide data of current head list into new head list
                         if (nextIndex != headEnemy.tail.Count)
@@ -184,30 +197,28 @@ namespace Centipede
                             newHeadEnemy.tail.Reverse();
                         }
                     }
-                    else    //It is the case player shoot last part; 
+                    else    //It is the case player shoot last part
                     {
                         headEnemy.tail.RemoveAt(thisIndex);
-
-                        //Continued movement
-                        headEnemy.isDivide = false;
+                        headEnemy.isDivide = false;                         //Continued movement
                     }
 
                     if(newHead != null && newHeadEnemy != null)
                     {
-                        //Set new direction for new head
-                        newHeadEnemy.horizontal = -headEnemy.horizontal;
-
-                        //Continued movement
-                        headEnemy.isDivide = false;
-
-                        //Random speed for new head movement
-                        newHeadEnemy.RandomSpeed();
-
-                        //Enable script of new head
-                        newHeadEnemy.enabled = true;
+                        newHeadEnemy.horizontal = -headEnemy.horizontal;    //Set new horzontal direction for new head
+                        newHeadEnemy.vertical = headEnemy.vertical;         //Set new vertical direction for new head
+                        headEnemy.isDivide = false;                         //Continued movement
+                        newHeadEnemy.RandomSpeed();                         //Random speed for new head movement
+                        newHeadEnemy.enabled = true;                        //Enable script of new head
                     }
 
-                    Destroy(gameObject);
+                    if(isFirstHit)
+                    {
+                        GameManager.instance.score += 10;
+                        GameManager.instance.enemyLife--;
+                        UIManager.instance.UpdateScore();
+                        anim.Play("Enemy_Dead");
+                    }
                 }
             }
         }

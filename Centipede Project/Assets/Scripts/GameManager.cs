@@ -16,13 +16,13 @@ namespace Centipede
         [HideInInspector]
         public bool canPlay = false;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int playerLife;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int enemyLife;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int score = 0;
 
         void Awake()

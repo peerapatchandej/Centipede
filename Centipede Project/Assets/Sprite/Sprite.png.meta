@@ -1269,9 +1269,9 @@ TextureImporter:
       name: Sprite_74
       rect:
         serializedVersion: 2
-        x: 68
+        x: 72
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1289,9 +1289,9 @@ TextureImporter:
       name: Sprite_75
       rect:
         serializedVersion: 2
-        x: 85
+        x: 89
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1309,9 +1309,9 @@ TextureImporter:
       name: Sprite_76
       rect:
         serializedVersion: 2
-        x: 102
+        x: 106
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1329,9 +1329,9 @@ TextureImporter:
       name: Sprite_77
       rect:
         serializedVersion: 2
-        x: 119
+        x: 123
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1349,9 +1349,9 @@ TextureImporter:
       name: Sprite_78
       rect:
         serializedVersion: 2
-        x: 136
+        x: 140
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1369,9 +1369,9 @@ TextureImporter:
       name: Sprite_79
       rect:
         serializedVersion: 2
-        x: 153
+        x: 157
         y: 45
-        width: 16
+        width: 8
         height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -2114,7 +2114,7 @@ TextureImporter:
         width: 8
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2134,7 +2134,7 @@ TextureImporter:
         width: 8
         height: 8
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
