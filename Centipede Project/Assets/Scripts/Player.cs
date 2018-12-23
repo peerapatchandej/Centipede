@@ -20,6 +20,7 @@ namespace Centipede
 
         private float timer = 0f;
         private float maxPositionY = 0;
+        private bool isCollide = false;
 
         /// <summary>
         /// Called awake method of base class.
@@ -111,19 +112,23 @@ namespace Centipede
         {
             if (collision.CompareTag("Enemy"))
             {
-                GameManager.instance.playerLife--;
-                GameManager.instance.canPlay = false;
-
-                UIManager.instance.UpdateLife();
-                anim.Play("Player_Dead");
-
-                if (GameManager.instance.playerLife != 0)
+                if (!isCollide)
                 {
-                    Invoke("Retry", 1f); /*************/
-                }
-                else
-                {
-                    UIManager.instance.ShowGameOver();
+                    isCollide = true;
+                    GameManager.instance.playerLife--;
+                    GameManager.instance.canPlay = false;
+
+                    UIManager.instance.UpdateLife();
+                    anim.Play("Player_Dead");
+
+                    if (GameManager.instance.playerLife != 0)
+                    {
+                        Invoke("Retry", 1f); /*************/
+                    }
+                    else
+                    {
+                        UIManager.instance.ShowGameOver();
+                    }
                 }
             }
         }
